@@ -32,7 +32,11 @@ namespace Smartspace.Repository.Test
         [Test]
         public void ReturnAllItems_WhenAllIsCalled()
         {
+            var firstItemId = 1;
+            _item.SetupProperty(i => i.Id, firstItemId);
             var item2 = new Mock<IStoreable>();
+            var secondItemId = 2;
+            item2.SetupProperty(i => i.Id, secondItemId);
 
             _repository.Save(_item.Object);
             _repository.Save(item2.Object);
@@ -64,6 +68,19 @@ namespace Smartspace.Repository.Test
             _repository.Delete(objectIdToDelete);
 
             Assert.IsNull(_repository.FindById(objectIdToDelete));
+        }
+
+        [Test]
+        public void NotAddSameItem_WhenSaveIsCalled()
+        {
+            var expectedObjectCount = 1;
+            var expectedObjectId = 1;
+            _item.SetupProperty(i => i.Id, expectedObjectId);
+
+            _repository.Save(_item.Object);
+            _repository.Save(_item.Object);
+
+            Assert.AreEqual(expectedObjectCount, _repository.All().Count());
         }
     }
 }

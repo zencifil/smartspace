@@ -34,7 +34,9 @@ namespace Smartspace.Repository
 
         public void Save(T item)
         {
-            _entityList.Add(item);
+            var existingItem = FindById(item.Id);
+            if (existingItem == null)
+                _entityList.Add(item);
         }
 
         private bool IsMatch(IComparable id1, IComparable id2)
