@@ -15,22 +15,31 @@ namespace Smartspace.Repository
 
         public IEnumerable<T> All()
         {
-            return _entityList;
+            return _entityList.AsReadOnly();
         }
 
         public void Delete(IComparable id)
         {
-            throw new NotImplementedException();
+            var item = FindById(id);
+            if (item == null)
+                return;
+
+            _entityList.Remove(item);
         }
 
         public T FindById(IComparable id)
         {
-            throw new NotImplementedException();
+            return _entityList.Find(i => IsMatch(i.Id, id));
         }
 
         public void Save(T item)
         {
             _entityList.Add(item);
+        }
+
+        private bool IsMatch(IComparable id1, IComparable id2)
+        {
+            return id1.CompareTo(id2) == 0;
         }
     }
 }
